@@ -1,0 +1,11 @@
+t = -2:0.01:2;
+x1 = 10*cos(20*pi*t);
+x2 = exp(-3*(t+1));
+u1 = (t >= -1); 
+x = x1 .* x2 .* u1;
+subplot(211), plot(t, x1, t, x2, t, u1);
+title("The signal 10 cos(20\pit) exp(-3(t+1)) u(t+1)");
+xlabel("Time (t)");
+subplot(212), plot(t, x);
+title("10cos(20\pit)*exp(-3(t+1))*u(t+1)");
+xlabel("Time (t)");

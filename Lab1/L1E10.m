@@ -15,21 +15,29 @@ title('Signals x1(n) (blue) and y1(t) (red)');
 xlabel('Time, t');
 hold off;
 
-
 %% Part a
 L = length(x1);
-fprintf("The length of x1 is %i\n", L);
+fprintf("The length of x1 is %d\n", L);
 
 %% Part b
 n = 0:L-1;
-stem(n, x1)
+figure;
+stem(n, x1, 'filled');
+title('Signal x1(n) vs sample index n');
+xlabel('Sample index n');
+ylabel('Amplitude');
 
 %% Part c
-N = 10;
-fprintf("The period is %.2f s\n", N);
+N = 10; % 10 samples per period
+fprintf("The period is %d samples\n", N);
 
 %% Part d
-f = N/(1/T);
-fprintf("The normalized frequency is %.2f Hz", f)
+f = N/(1/T); % normalized frequency = analog frequency / sampling frequency
+fprintf("The normalized frequency is %.2f Hz\n", f);
 
 %% Part e
+fprintf("The relationship is: f = F/Fs = 10/100 = 0.1\n");
+
+%% Part f
+fprintf("The relationship between period N and normalized frequency f is: N = 1/f\n");
+fprintf("With f = 0.1, N = 1/0.1 = 10 samples, which matches our observation\n");

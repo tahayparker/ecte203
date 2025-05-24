@@ -20,10 +20,20 @@ xlabel('lag (l)'); ylabel('r_{xs}(l)');
 f = gcf; exportgraphics(f,'L5T3-c.png','Resolution',300)
 
 %% Part d - Noise Addition and Detection
-w = sqrt(0.36) * randn(length(x)); % Additive white noise (σ = 0.6)
-w = w - mean(w); % Zero-mean noise
 
-z = x + w; % Add noise to signal
+% Generate noise in chunks since x is too large and causes MATLAB to become unresponsive
+chunk_size = 1e5;
+z = zeros(size(x), 'like', x);  % Preallocate with same shape
+
+for i = 1:chunk_size:length(x)
+    idx = i:min(i+chunk_size-1, length(x));
+    x_chunk = x(idx);                      % Extract chunk
+    x_chunk = x_chunk(:);                 % Force column vector
+    w = sqrt(0.36) * randn(length(x_chunk), 1, 'like', x);  % Column vector noise
+    w = w - mean(w);
+    z(idx) = x_chunk + w;
+end
+
 sound(z, Fs); % Play noisy signal
 
 figure;
@@ -47,8 +57,9 @@ pause(2);
 sound(r, Fs);
 
 %% Part f-b - Signal Visualization
+rx = linspace(0, 4, 34000);
 figure;
-plot(tx, r);
+plot(rx, r);
 title('Signal r(n)');
 xlabel('n'); ylabel('r(n)');
 f = gcf; exportgraphics(f,'L5T3-f-b.png','Resolution',300)
@@ -62,14 +73,23 @@ xlabel('lag (l)'); ylabel('r_{rv}(l)');
 f = gcf; exportgraphics(f,'L5T3-f-c.png','Resolution',300)
 
 %% Part f-d - Noise Addition and Detection
-w = sqrt(0.36) * randn(length(r)); % Additive white noise
-w = w - mean(w); % Zero-mean noise
+% Generate noise in chunks since x is too large and causes MATLAB to become unresponsive
+chunk_size = 1e5;
+m = zeros(size(r), 'like', r);  % Preallocate with same shape
 
-m = r + w; % Add noise to second signal
+for i = 1:chunk_size:length(r)
+    idx = i:min(i+chunk_size-1, length(r));
+    r_chunk = r(idx);                      % Extract chunk
+    r_chunk = r_chunk(:);                 % Force column vector
+    w = sqrt(0.36) * randn(length(r_chunk), 1, 'like', r);  % Column vector noise
+    w = w - mean(w);
+    m(idx) = r_chunk + w;
+end
+
 sound(m, Fs); % Play noisy second signal
 
 figure;
-plot(tx, m);
+plot(rx, m);
 title('Signal m(n) = r(n) + w(n)');
 xlabel('n'); ylabel('m(n)');
 f = gcf; exportgraphics(f,'L5T3-f-d1.png','Resolution',300)
